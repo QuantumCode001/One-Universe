@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Premium Glass UI – Book Shelf</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --glass-light: rgba(255,255,255,0.25);
+  --glass-dark: rgba(255,255,255,0.08);
+  --border-light: rgba(255,255,255,0.4);
+  --border-dark: rgba(255,255,255,0.15);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+  min-height:100vh;
+  background:#eef1ff;
+  overflow-x:hidden;
+  transition:.4s;
+}
+body.dark{background:#0f1220;}
+
+/* Background blobs */
+.blob{
+  position:fixed;width:320px;height:320px;
+  filter:blur(80px);opacity:.6;
+  animation: float 12s infinite alternate ease-in-out;
+  z-index:-1;
+}
+.blob.one{background:#7f8cff;top:10%;left:5%;}
+.blob.two{background:#ff8c00;bottom:10%;right:5%;}
+.blob.three{background:#25d9c8;top:40%;right:25%;}
+
+@keyframes float{
+  from{transform:translate(0,0);}
+  to{transform:translate(60px,-80px);}
+}
+
+/* Toggle */
+.toggle{
+  position:fixed;top:20px;right:20px;
+  padding:10px 14px;border-radius:50px;
+  background:var(--glass-light);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-light);
+  cursor:pointer;z-index:100;
+}
+body.dark .toggle{background:var(--glass-dark);border-color:var(--border-dark);color:#fff;}
+
+.logo{
+  position:fixed;top:20px;left:20px;
+  padding:8px 16px;border-radius:50px;
+  background:var(--glass-light);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-light);
+  font-weight:600;letter-spacing:2px;
+}
+body.dark .logo{background:var(--glass-dark);border-color:var(--border-dark);color:#fff;}
+
+.container{
+  max-width:760px;
+  margin:auto;
+  padding:120px 16px 120px;
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap:26px;
+}
+
+/* 📱 APP CARD */
+.app-card{
+  position:relative;
+  height:260px;
+  border-radius:26px;
+  background:var(--glass-light);
+  backdrop-filter:blur(18px);
+  border:1px solid var(--border-light);
+  box-shadow:0 30px 60px rgba(0,0,0,.25);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.app-card:hover{
+  transform:translateY(-6px);
+}
+
+.app-card:active{
+  transform:scale(0.96);
+  box-shadow:0 14px 30px rgba(127,140,255,.5);
+}
+
+/* App logo */
+.app-logo{
+  width:80px;
+  height:80px;
+  border-radius:22px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 12px 30px rgba(0,0,0,.3);
+}
+
+.app-logo img{
+  width:60%;
+}
+
+/* App text */
+.app-info{
+  text-align:center;
+  color:#fff;
+}
+
+.app-info h3{
+  font-size:18px;
+  font-weight:600;
+}
+
+.app-info p{
+  font-size:12px;
+  opacity:.85;
+}
+
+/* App tag */
+.app-tag{
+  padding:4px 12px;
+  border-radius:50px;
+  font-size:11px;
+  background:rgba(255,255,255,.2);
+}
+
+
+/* hover stays subtle */
+.book-card:hover{
+  transform: translateY(-4px);
+}
+
+/* 👆 SIMPLE CLICK ANIMATION */
+.book-card:active{
+  transform: scale(0.97);
+  box-shadow:0 15px 30px rgba(0,0,0,.2);
+}
+
+/* 📘 Book click animation */
+.book-card:active{
+  transform: scale(0.96) rotateY(-6deg) rotateX(4deg);
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+
+/* Glow pulse */
+.book-card.clicked{
+  animation: bookPop 0.45s ease;
+}
+
+@keyframes bookPop{
+  0%{
+    transform: scale(1) rotateY(0);
+    box-shadow: 0 30px 60px rgba(0,0,0,.25);
+  }
+  50%{
+    transform: scale(0.95) rotateY(-8deg);
+    box-shadow: 0 15px 35px rgba(127,140,255,.6);
+  }
+  100%{
+    transform: scale(1) rotateY(0);
+    box-shadow: 0 30px 60px rgba(0,0,0,.25);
+  }
+}
+
+/* Book spine */
+.book-card::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;
+  width:16px;height:100%;
+  background:rgba(0,0,0,.25);
+}
+
+/* Cover image */
+.book-cover{
+  height:68%;
+  background-size:cover;
+  background-position:center;
+}
+
+/* Book text */
+.book-info{
+  padding:14px;
+  color:#fff;
+}
+.book-info h3{
+  font-size:18px;
+  margin-bottom:4px;
+}
+.book-info p{
+  font-size:12px;
+  opacity:.85;
+}
+
+/* More card */
+.more{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  font-weight:600;
+}
+
+/* Footer bar */
+.footer-bar{
+  position:fixed;
+  bottom:20px;left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 40px);
+  max-width:420px;height:68px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 22px;
+  background:var(--glass-light);
+  backdrop-filter:blur(18px);
+  border-radius:26px;
+  border:1px solid var(--border-light);
+  box-shadow:0 18px 45px rgba(0, 0, 0, 0.608);
+}
+body.dark .footer-bar{background:var(--glass-dark);border-color:var(--border-dark);}
+
+.footer-item{
+  text-align:center;
+  font-size:11px;
+  cursor:pointer;
+  transition:.3s;
+}
+.footer-item span{font-size:20px;}
+.footer-item:hover{transform:translateY(-4px);}
+body.dark .footer-item{color:#fff;}
+
+
+.footer-icon{
+  width:40px;
+  height:40px;
+  object-fit:contain;
+}
+
+.footer-item.active .footer-icon{
+  filter: drop-shadow(0 0 6px rgba(127,140,255,0.7));
+}
+
+.footer-item a{
+  text-decoration:none;
+  color:inherit;
+}
+
+.card-link{
+  text-decoration:none;
+  color:inherit;
+  display:block;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="logo">RANJIT</div>
+<div class="blob one"></div>
+<div class="blob two"></div>
+<div class="blob three"></div>
+
+<div class="toggle" onclick="toggleMode()">🌙</div>
+
+<!-- 📱 APP SECTION -->
+<div class="container">
+
+  <a href="https://drive.google.com/file/d/13Qs0H-NApdv91mJjo1smYgb4N6MakUAo/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/youtube.png">
+    </div>
+    <div class="app-info">
+      <h3>YouTube Lite</h3>
+      <p>Video Streaming</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1mWJRNbbJkHVVan8EAWtSy6sfXrkdLyR9/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/music.png">
+    </div>
+    <div class="app-info">
+      <h3>YouTube Music</h3>
+      <p>music Streaming</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1NsarfInnzr6RuxFo5FZVUFpy2s1uwU1Q/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/wpss.jpg">
+    </div>
+    <div class="app-info">
+      <h3>WPS office</h3>
+      <p>for office work</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1TcjIpEcgiAClgYMZFlU6uKj3NyF6AfUY/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/vn.png">
+    </div>
+    <div class="app-info">
+      <h3>VN</h3>
+      <p> for Video editing</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1NdT-_8ebjU1z0eFpNbAXZ--MN7GddFhl/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/true.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Truecaller</h3>
+      <p>better calling</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1zhWcdWj9T1qrLWVulgp_TBCRk8XZgjzw/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/terabox.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Terabox</h3>
+      <p>for storage</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1U8ht4zyikX2-O4otcHY_coXiBZy8Mcup/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/teligram.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Telegram</h3>
+      <p>for messaging</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1ANUv4xesIkkCyNPpJeEkxUTCW1hbdj56/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/spoty.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Spotify</h3>
+      <p>Music Streaming</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1VRzz7WQDd8KKW16aEmKRFy2f1fn3CbpW/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/snaptube.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Snaptube</h3>
+      <p>Video Downloading</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1L2TWSvLGIg3dAfczT3MxUo25OYWQDcmT/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/smartluncher.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Smart Launcher</h3>
+      <p>for better ui exprience</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1ulOARHZhFPfdLAxygTSa0BxMOZajldJN/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/shotcut.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Shotcut</h3>
+      <p>for video editing</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1CKIPXTaDKbPMt8jOA0kFoh2QsTgDEHjW/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/reeso.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Resso</h3>
+      <p>for viral music lisioning</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1Ep63wjzECPTT6F1czkAJN_4d8rBZug07/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/proton.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Proton VPN</h3>
+      <p>the best VPN ever</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1AaW6DelGCsiI0eeiJM-bylTum7QNgGU4/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/picart.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Picsart</h3>
+      <p>for AI image editing</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+ <a href="https://drive.google.com/file/d/1RGDVuKq6gyOUEgzLpNRSAR4wQD7_WuF7/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/nigra.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Niagara Launcher</h3>
+      <p>incrising UI exprience</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/1zBz6_teTf035L1C5xFLmbNDJgztJgv7W/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/netflix.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Netflix</h3>
+      <p>for streaming movies and shows</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/16X3qFUmjuH8CDec2FUMuAOx8lCCAMqSl/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/movie box.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Movie Box</h3>
+      <p>for streaming movies and shows</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/1ddfss-rT4Xav6hrAkyYjOZwli_aLjj0d/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/mini.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Mini-militia</h3>
+      <p>an army type action game</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/1fLBvWv6ALH--vHGMmDKTe_nbC67AhueD/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/microsoft copilot.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Microsoft Copilot</h3>
+      <p>for AI assistance</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/1ckAesA5P97WLEGDnYYXZj75tBfw50kEk/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/meta.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Meta</h3>
+      <p>for AI assistance</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/1qkjbt4ZhKmFcIFfZX6ligNYtMfn8VJmJ/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/magicerrase.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Magic Eraser</h3>
+      <p>for AI image editing</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/1sSJiDKfPLebMVEPe1e-LUA7q-M7wZRCC/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/lightroom.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Lightroom</h3>
+      <p>for AI image editing</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/19RCbEAcRvqXwZA5XSuSSr9qHkiKQ_h4l/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/kine.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Kine Master</h3>
+      <p>for video editing</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/1iF9Dt-lwqFbS5fDTUGF0zIkFLJlNTDkI/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/instagram.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Instagram</h3>
+      <p>for social media</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/1PZnd-fbpmtxPVtLtkVSmyTl3zKhmHE64/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/hypic.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Hypic</h3>
+      <p>for AI image editing</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+   <a href="https://drive.google.com/file/d/1qVol-6UbTqNHU9FKp33S0NK9zwP_2NJp/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/doo.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Duolingo</h3>
+      <p>for language learning</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1iqiPtro9KkX-b3_CGDztQYjOpT9u1luE/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/capcut.jpg">
+    </div>
+    <div class="app-info">
+      <h3>Capcut</h3>
+      <p>for video editing</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1-Xu7VFkPhcqPqVK1JB2nyOTH3S-FD7Dg/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/ai chatbot.jpg">
+    </div>
+    <div class="app-info">
+      <h3>AI Chatbot</h3>
+      <p>for AI assistance</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/file/d/1LGQ_72i9iLC_lzyhGHsfa9HJnLMtQMzt/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <div class="app-logo">
+      <img src="appimages/photoshop.jpg">
+    </div>
+    <div class="app-info">
+      <h3> Adobe Photoshop</h3>
+      <p>for image editing</p>
+    </div>
+    <div class="app-tag">GET</div>
+  </div>
+  </a>
+
+  <a href="https://drive.google.com/drive/folders/1ROL6ZPPpBR7MfTHkV-M_PDiqNBYKFmCI?usp=drive_link" target="_blank" class="card-link">
+  <div class="app-card">
+    <h2 style="color:#0a0a0a">＋ More Apps</h2>
+  </div>
+  </a>
+</div>
+
+
+<!-- FOOTER -->
+<footer class="footer-bar">
+  <div class="footer-item">
+  <a href="app.html">
+    <span>
+      <img src="image/back.png" class="footer-icon">
+    </span>
+  </a>
+</div>
+
+  <div class="footer-item active">
+    <a href="index.html">
+    <span>
+      <img src="image/home.png" class="footer-icon">
+    </span>
+  </a>
+    
+  </div>
+
+  <div class="footer-item">
+   <a href="mailto:rd687723@gmail.com">
+    <span>
+      <img src="image/mail.png" class="footer-icon">
+    </span>
+  </a>
+  </div>
+
+  <div class="footer-item">
+    <a href="about.html">
+    <span>
+      <img src="image/about.png" class="footer-icon">
+    </span>
+  </a>
+  </div>
+
+</footer>
+<script>
+const body=document.body;
+const toggle=document.querySelector('.toggle');
+
+if(localStorage.getItem('mode')==='dark'){
+  body.classList.add('dark');
+  toggle.textContent='☀️';
+}
+
+function toggleMode(){
+  body.classList.toggle('dark');
+  toggle.textContent=body.classList.contains('dark')?'☀️':'🌙';
+  localStorage.setItem('mode',body.classList.contains('dark')?'dark':'light');
+}
+</script>
+
+</body>
+</html>

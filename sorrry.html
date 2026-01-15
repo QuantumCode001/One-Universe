@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Oops! Something Went Wrong</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --glass-light: rgba(255,255,255,0.25);
+  --glass-dark: rgba(255,255,255,0.08);
+  --border-light: rgba(255,255,255,0.4);
+  --border-dark: rgba(255,255,255,0.15);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:#eef1ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.4s;
+  overflow:hidden;
+}
+
+body.dark{
+  background:#0f1220;
+}
+
+/* 🔮 Background blobs */
+.blob{
+  position:fixed;
+  width:320px;
+  height:320px;
+  filter:blur(80px);
+  opacity:.6;
+  animation: float 12s infinite alternate ease-in-out;
+  z-index:-1;
+}
+
+.blob.one{background:#7f8cff; top:10%; left:5%;}
+.blob.two{background:#ff8c00; bottom:10%; right:5%;}
+.blob.three{background:#25d9c8; top:40%; right:25%;}
+
+@keyframes float{
+  from{transform:translate(0,0);}
+  to{transform:translate(60px,-80px);}
+}
+
+/* 🌙 Toggle */
+.toggle{
+  position:fixed;
+  top:20px;
+  right:20px;
+  padding:10px 14px;
+  border-radius:50px;
+  background:var(--glass-light);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-light);
+  cursor:pointer;
+  z-index:100;
+}
+
+body.dark .toggle{
+  background:var(--glass-dark);
+  border-color:var(--border-dark);
+  color:#fff;
+}
+
+/* 🧊 Error Card */
+.error-card{
+  max-width:420px;
+  padding:40px 32px;
+  text-align:center;
+  border-radius:30px;
+  background:var(--glass-light);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border-light);
+  box-shadow:0 35px 70px rgba(0,0,0,.25);
+  color:#111;
+}
+
+body.dark .error-card{
+  background:var(--glass-dark);
+  border-color:var(--border-dark);
+  color:#fff;
+}
+
+.error-icon{
+  font-size:72px;
+  margin-bottom:16px;
+}
+
+.error-card h1{
+  font-size:28px;
+  letter-spacing:1px;
+}
+
+.error-card p{
+  font-size:14px;
+  opacity:.85;
+  margin:14px 0 28px;
+  line-height:1.6;
+}
+
+/* 🔘 Buttons */
+.actions{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+}
+
+.actions a{
+  text-decoration:none;
+}
+
+.btn{
+  padding:12px 22px;
+  border-radius:14px;
+  border:none;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  background:rgba(255,255,255,.35);
+  backdrop-filter:blur(10px);
+  color:inherit;
+  transition:.3s;
+}
+
+.btn:hover{
+  transform:translateY(-3px);
+  background:rgba(255,255,255,.5);
+}
+
+/* 🔻 Footer Bar */
+.footer-bar{
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 420px;
+  height: 68px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 22px;
+  background: var(--glass-light);
+  backdrop-filter: blur(18px);
+  border-radius: 26px;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.25);
+}
+
+body.dark .footer-bar{
+  background: var(--glass-dark);
+  border-color: var(--border-dark);
+}
+
+.footer-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  font-size:11px;
+  cursor:pointer;
+  transition:.3s;
+}
+.footer-item span{font-size:20px;}
+.footer-item:hover{transform:translateY(-4px);}
+body.dark .footer-item{color:#fff;}
+
+.footer-icon{
+  width:40px;
+  height:40px;
+  object-fit:contain;
+}
+
+.footer-item.active .footer-icon{
+  filter: drop-shadow(0 0 6px rgba(127,140,255,0.7));
+}
+
+.footer-item a{
+  text-decoration:none;
+  color:inherit;
+}
+</style>
+</head>
+
+<body>
+
+<div class="blob one"></div>
+<div class="blob two"></div>
+<div class="blob three"></div>
+
+<div class="toggle" onclick="toggleMode()">🌙</div>
+
+<div class="error-card">
+  <div class="error-icon">😕</div>
+  <h1>Oops! Something Went Wrong</h1>
+  <p>
+    The page you’re trying to open is not available right now.<br>
+    It may be under maintenance or failed to load.
+  </p>
+
+  <div class="actions">
+    <a href="index.html"><button class="btn">🏠 Go Home</button></a>
+    <a href=""><button class="btn" onclick="location.reload()">🔄 Retry</button></a>
+  </div>
+</div>
+
+<footer class="footer-bar">
+  <div class="footer-item">
+  <a href="JeeNeet.html">
+    <span>
+      <img src="image/back.png" class="footer-icon">
+    </span>
+  </a>
+</div>
+
+
+  <div class="footer-item active">
+    <a href="index.html">
+    <span>
+      <img src="image/home.png" class="footer-icon">
+    </span>
+  </a>
+    
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-item">
+   <a href="mailto:rd687723@gmail.com">
+    <span>
+      <img src="image/mail.png" class="footer-icon">
+    </span>
+  </a>
+  </div>
+
+  <div class="footer-item">
+    <a href="about.html">
+    <span>
+      <img src="image/about.png" class="footer-icon">
+    </span>
+  </a>
+  </div>
+
+</footer>
+
+<script>
+const body=document.body;
+const toggle=document.querySelector('.toggle');
+
+if(localStorage.getItem('mode')==='dark'){
+  body.classList.add('dark');
+  toggle.textContent='☀️';
+}
+
+function toggleMode(){
+  body.classList.toggle('dark');
+  const dark=body.classList.contains('dark');
+  toggle.textContent=dark?'☀️':'🌙';
+  localStorage.setItem('mode',dark?'dark':'light');
+}
+</script>
+
+</body>
+</html>

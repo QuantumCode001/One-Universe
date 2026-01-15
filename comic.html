@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Premium Glass UI – Book Shelf</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --glass-light: rgba(255,255,255,0.25);
+  --glass-dark: rgba(255,255,255,0.08);
+  --border-light: rgba(255,255,255,0.4);
+  --border-dark: rgba(255,255,255,0.15);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+  min-height:100vh;
+  background:#eef1ff;
+  overflow-x:hidden;
+  transition:.4s;
+}
+body.dark{background:#0f1220;}
+
+/* Background blobs */
+.blob{
+  position:fixed;width:320px;height:320px;
+  filter:blur(80px);opacity:.6;
+  animation: float 12s infinite alternate ease-in-out;
+  z-index:-1;
+}
+.blob.one{background:#7f8cff;top:10%;left:5%;}
+.blob.two{background:#ff8c00;bottom:10%;right:5%;}
+.blob.three{background:#25d9c8;top:40%;right:25%;}
+
+@keyframes float{
+  from{transform:translate(0,0);}
+  to{transform:translate(60px,-80px);}
+}
+
+/* Toggle */
+.toggle{
+  position:fixed;top:20px;right:20px;
+  padding:10px 14px;border-radius:50px;
+  background:var(--glass-light);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-light);
+  cursor:pointer;z-index:100;
+}
+body.dark .toggle{background:var(--glass-dark);border-color:var(--border-dark);color:#fff;}
+
+.logo{
+  position:fixed;top:20px;left:20px;
+  padding:8px 16px;border-radius:50px;
+  background:var(--glass-light);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-light);
+  font-weight:600;letter-spacing:2px;
+}
+body.dark .logo{background:var(--glass-dark);border-color:var(--border-dark);color:#fff;}
+
+.container{
+  max-width:760px;
+  margin:auto;
+  padding:120px 16px 120px;
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap:26px;
+}
+
+/* 📚 3D BOOK CARD */
+.book-card{
+  position:relative;
+  height:300px;
+  border-radius:26px;
+  background:var(--glass-light);
+  backdrop-filter:blur(18px);
+  border:1px solid var(--border-light);
+  box-shadow:0 30px 60px rgba(0,0,0,.25);
+  overflow:hidden;
+  cursor:pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+/* hover stays subtle */
+.book-card:hover{
+  transform: translateY(-4px);
+}
+
+/* 👆 SIMPLE CLICK ANIMATION */
+.book-card:active{
+  transform: scale(0.97);
+  box-shadow:0 15px 30px rgba(0,0,0,.2);
+}
+
+/* 📘 Book click animation */
+.book-card:active{
+  transform: scale(0.96) rotateY(-6deg) rotateX(4deg);
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+
+/* Glow pulse */
+.book-card.clicked{
+  animation: bookPop 0.45s ease;
+}
+
+@keyframes bookPop{
+  0%{
+    transform: scale(1) rotateY(0);
+    box-shadow: 0 30px 60px rgba(0,0,0,.25);
+  }
+  50%{
+    transform: scale(0.95) rotateY(-8deg);
+    box-shadow: 0 15px 35px rgba(127,140,255,.6);
+  }
+  100%{
+    transform: scale(1) rotateY(0);
+    box-shadow: 0 30px 60px rgba(0,0,0,.25);
+  }
+}
+
+/* Book spine */
+.book-card::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;
+  width:16px;height:100%;
+  background:rgba(0,0,0,.25);
+}
+
+/* Cover image */
+.book-cover{
+  height:68%;
+  background-size:cover;
+  background-position:center;
+}
+
+/* Book text */
+.book-info{
+  padding:14px;
+  color:#fff;
+}
+.book-info h3{
+  font-size:18px;
+  margin-bottom:4px;
+}
+.book-info p{
+  font-size:12px;
+  opacity:.85;
+}
+
+/* More card */
+.more{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  font-weight:600;
+}
+
+/* Footer bar */
+.footer-bar{
+  position:fixed;
+  bottom:20px;left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 40px);
+  max-width:420px;height:68px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 22px;
+  background:var(--glass-light);
+  backdrop-filter:blur(18px);
+  border-radius:26px;
+  border:1px solid var(--border-light);
+  box-shadow:0 18px 45px rgba(0,0,0,.25);
+}
+body.dark .footer-bar{background:var(--glass-dark);border-color:var(--border-dark);}
+
+.footer-item{
+  text-align:center;
+  font-size:11px;
+  cursor:pointer;
+  transition:.3s;
+}
+.footer-item span{font-size:20px;}
+.footer-item:hover{transform:translateY(-4px);}
+body.dark .footer-item{color:#fff;}
+
+
+.footer-icon{
+  width:40px;
+  height:40px;
+  object-fit:contain;
+}
+
+.footer-item.active .footer-icon{
+  filter: drop-shadow(0 0 6px rgba(127,140,255,0.7));
+}
+
+.footer-item a{
+  text-decoration:none;
+  color:inherit;
+}
+
+.card-link{
+  text-decoration:none;
+  color:inherit;
+  display:block;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="logo">RANJIT</div>
+<div class="blob one"></div>
+<div class="blob two"></div>
+<div class="blob three"></div>
+
+<div class="toggle" onclick="toggleMode()">🌙</div>
+
+<!-- 📚 BOOK SECTION -->
+<div class="container">
+
+  <a href="https://drive.google.com/file/d/19yz5hEOMSithRjzADV3r9YOut_m2uXbh/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/Ultimate\ Spiderman\ vol1.png')"></div>
+    <div class="book-info">
+      <h3>ULTIMATE SPIDER MAN</h3>
+      <p>volume 1</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/194DBCopySbO7bG76rgLQoZA0Ew2kgZiQ/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/Ultimate\ Spiderman\ vol\ 2.png')"></div>
+    <div class="book-info">
+      <h3>ULTIMATE SPIDER MAN</h3>
+      <p>volume 2</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1nlQYo83-0CoEaGsZGS-cJSwgEn9fJ-KG/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/one\ piece\ ace\ vol\ 1.png')"></div>
+    <div class="book-info">
+      <h3>ONE PIECE ACE</h3>
+      <p>volume 1</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1YpA3kQW9YiCUyU1uVmJf_XkEnUnKk_ZC/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/one\ piece\ ace\ vol\ 2.png')"></div>
+    <div class="book-info">
+      <h3>ONE PIECE ACE</h3>
+      <p>volume 2</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1pCPdWgnKzHa_IuFjMId8P2u3j1Na15GF/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/naruto\ vol\ 1.png')"></div>
+    <div class="book-info">
+      <h3>NARUTO</h3>
+      <p>volume 1</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1lx_PDEuRL_kX3tIZdEvUtKB6AkYT0upK/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/naruto\ vol\ 2.png')"></div>
+    <div class="book-info">
+      <h3>NARUTO</h3>
+      <p>volume 2</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1LFO3p0w6tS0IQMhwr0ChjL9MsBNvAY31/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/naruto\ vol\ 3.png')"></div>
+    <div class="book-info">
+      <h3>NARUTO</h3>
+      <p>volume 3</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1GqGRNXDGtEBY3LOe1PpBYs5ccupCwMG1/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/naruto\ vol\ 4.png')"></div>
+    <div class="book-info">
+      <h3>NARUTO</h3>
+      <p>volume 4</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1cnY0AtZkq2_-Pit1z7xbazwK9Hw9t4Mn/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/naruto\ vol\ 5.png')"></div>
+    <div class="book-info">
+      <h3>NARUTO</h3>
+      <p>volume 5</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1hvPuMhb-hYdUtx3u2QxLaLdHeQPwfsRL/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/ghosts.png')"></div>
+    <div class="book-info">
+      <h3>GHOSTS</h3>
+      <p>volume 1</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/17Tu_ru-duNs2te7afzrKJthHqgc13XiJ/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/demon\ slayer\ vol\ 1.png')"></div>
+    <div class="book-info">
+      <h3>DEMON SLAYER</h3>
+      <p>volume 1</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1vAmEUpK9PA5a5wjDS6IKw1UR83mWiZ6u/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/demon\ slayer\ vol\ 2.png')"></div>
+    <div class="book-info">
+      <h3>DEMON SLAYER</h3>
+      <p>volume 2</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/12UlfO6l-6J9x63CXdM-jCMjV7NiiyZwo/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/demon\ slayer\ vol\ 3.png')"></div>
+    <div class="book-info">
+      <h3>DEMON SLAYER</h3>
+      <p>volume 3</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/140Og4WSQE44zkgqqOySlUDx0ZjvwUKeI/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/demon\ slayer\ vol\ 4.png')"></div>
+    <div class="book-info">
+      <h3>DEMON SLAYER</h3>
+      <p>volume 4</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1eLK5wBdXSMEPJ17RiVw1qtqvYSP5St6-/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/naruto\ ithaci\ vol\ 1.png')"></div>
+    <div class="book-info">
+      <h3>NARUTO ITACHIS</h3>
+      <p>volume 1</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1yQlutFa6VL9OoXzyI9pudiJNTVO_xSIS/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/naruto\ itachi\ vol\ 2.png')"></div>
+    <div class="book-info">
+      <h3>NARUTO ITACHIS</h3>
+      <p>volume 2</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1y5uzwxcO7pEmw2goPv3iIs0RjKK2T0R-/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/jujutsu\ kaisan\ vol\ 1.png')"></div>
+    <div class="book-info">
+      <h3>JUJUTSU KAISEN</h3>
+      <p>volume 1</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1OLdUXTgbLaOZzSyZ29E-iUGR7KSQqs9W/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/jujutsu\ kaisen\ vol\ 2.png')"></div>
+    <div class="book-info">
+      <h3>JUJUTSU KAISEN</h3>
+      <p>volume 2</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1vAdKhtBntJGkMnm-6hVpYxTAp5QRGsG8/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/jujutsu\ kaisen\ vol\ 3.png')"></div>
+    <div class="book-info">
+      <h3>JUJUTSU KAISEN</h3>
+      <p>volume 3</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1OqIZ2jqKEiJRCQG_Ub2mOziqjB4qPHfz/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/jujutsu\ kaisen\ vol\ 4.png')"></div>
+    <div class="book-info">
+      <h3>JUJUTSU KAISEN</h3>
+      <p>volume 4</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1xES2JTxs9cGN6f-Uv5KZEvswR-OD3XPT/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/batman\ vs\ sipderman.png')"></div>
+    <div class="book-info">
+      <h3>BATMAN VS SPIDERMAN</h3>
+      <p>volume 1</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1aHzBwdKszXNwyRRo44F7g5ONdOt5ou67/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/batman\ vs\ panusher.png')"></div>
+    <div class="book-info">
+      <h3>BATMAN VS PUNISHER</h3>
+      <p>volume 1</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1pqAE-JwD2F3ZYcv5BMA0wlZQslAg_0Gg/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/chanshowmanvol1.png')"></div>
+    <div class="book-info">
+      <h3>CHAINSAW MAN</h3>
+      <p>volume 1</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1rjQL-nF6QM8ti9gF92QVW542oysULdVv/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/chainsawmanval2.png')"></div>
+    <div class="book-info">
+      <h3>CHAINSAW MAN</h3>
+      <p>volume 2</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1BEaSmM49PsHkvLvGmzyFgJq4Lc5p3T_o/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/chanshowmanvol3.png')"></div>
+    <div class="book-info">
+      <h3>CHAINSAW MAN</h3>
+      <p>volume 3</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1lNM1wnXQazbxBrr0RF7MtdcH-mPh8u6N/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/chanshowmanvol4.png')"></div>
+    <div class="book-info">
+      <h3>CHAINSAW MAN</h3>
+      <p>volume 4</p>
+    </div>
+  </div>
+</a>
+
+ <a href="https://drive.google.com/file/d/1Lt-hDIu6L5tSNfY5naPpKQ18ApNYSJIY/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/chanshowmanvol5.png')"></div>
+    <div class="book-info">
+      <h3>CHAINSAW MAN</h3>
+      <p>volume 5</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1XVGxaNtCWEwA5VaxfhTFz9Rh--VWE0d3/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/chanshowmanvol6.png')"></div>
+    <div class="book-info">
+      <h3>CHAINSAW MAN</h3>
+      <p>volume 6</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/13h3vhURiKuwkKENVfedOxsjBwiNLJjJz/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/chanshowmanvol7.png')"></div>
+    <div class="book-info">
+      <h3>CHAINSAW MAN</h3>
+      <p>volume 7</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/file/d/1r2syrOePmVeLa1iHfAGrgOddbtFh-Qom/view?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card">
+    <div class="book-cover" style="background-image:url('comicbookimages/chanshowmanvol8.png')"></div>
+    <div class="book-info">
+      <h3>CHAINSAW MAN</h3>
+      <p>volume 8</p>
+    </div>
+  </div>
+</a>
+
+<a href="https://drive.google.com/drive/folders/1n0cJH_BQKookaG27Pa3hapBapY9J6zq4?usp=drive_link" target="_blank" class="card-link">
+  <div class="book-card more">
+    + More Books
+  </div>
+</a>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer-bar">
+  <div class="footer-item">
+  <a href="Book&Pdf.html">
+    <span>
+      <img src="image/back.png" class="footer-icon">
+    </span>
+  </a>
+</div>
+
+
+  <div class="footer-item active">
+    <a href="index.html">
+    <span>
+      <img src="image/home.png" class="footer-icon">
+    </span>
+  </a>
+    
+  </div>
+
+  <div class="footer-item">
+   <a href="mailto:rd687723@gmail.com">
+    <span>
+      <img src="image/mail.png" class="footer-icon">
+    </span>
+  </a>
+  </div>
+
+  <div class="footer-item">
+    <a href="about.html">
+    <span>
+      <img src="image/about.png" class="footer-icon">
+    </span>
+  </a>
+  </div>
+
+</footer>
+
+<script>
+const body=document.body;
+const toggle=document.querySelector('.toggle');
+
+if(localStorage.getItem('mode')==='dark'){
+  body.classList.add('dark');
+  toggle.textContent='☀️';
+}
+
+function toggleMode(){
+  body.classList.toggle('dark');
+  toggle.textContent=body.classList.contains('dark')?'☀️':'🌙';
+  localStorage.setItem('mode',body.classList.contains('dark')?'dark':'light');
+}
+</script>
+
+</body>
+</html>

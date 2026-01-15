@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>About – Premium Glass UI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --glass-light: rgba(255,255,255,0.25);
+  --glass-dark: rgba(255,255,255,0.08);
+  --border-light: rgba(255,255,255,0.4);
+  --border-dark: rgba(255,255,255,0.15);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:#eef1ff;
+  overflow-x:hidden;
+  transition:.4s;
+}
+
+body.dark{
+  background:#0f1220;
+}
+
+/* Background blobs */
+.blob{
+  position:fixed;
+  width:320px;
+  height:320px;
+  filter:blur(80px);
+  opacity:.6;
+  animation: float 12s infinite alternate ease-in-out;
+  z-index:-1;
+}
+.blob.one{background:#7f8cff;top:10%;left:5%;}
+.blob.two{background:#ff8c00;bottom:10%;right:5%;}
+.blob.three{background:#25d9c8;top:40%;right:25%;}
+
+@keyframes float{
+  from{transform:translate(0,0);}
+  to{transform:translate(60px,-80px);}
+}
+
+/* Header */
+.logo{
+  position:fixed;
+  top:20px;
+  left:20px;
+  font-size:22px;
+  font-weight:600;
+  letter-spacing:2px;
+  padding:8px 16px;
+  border-radius:50px;
+  background:var(--glass-light);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-light);
+  z-index:100;
+}
+body.dark .logo{
+  color:#fff;
+  background:var(--glass-dark);
+  border-color:var(--border-dark);
+}
+
+.toggle{
+  position:fixed;
+  top:20px;
+  right:20px;
+  padding:10px 14px;
+  border-radius:50px;
+  background:var(--glass-light);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-light);
+  cursor:pointer;
+  z-index:100;
+}
+body.dark .toggle{
+  background:var(--glass-dark);
+  border-color:var(--border-dark);
+  color:#fff;
+}
+
+/* Content */
+.container{
+  max-width:800px;
+  margin:auto;
+  padding:120px 16px 120px;
+}
+
+/* About Card */
+.about-card{
+  background:var(--glass-light);
+  backdrop-filter:blur(18px);
+  border:1px solid var(--border-light);
+  border-radius:30px;
+  padding:36px;
+  box-shadow:0 30px 60px rgba(0,0,0,.25);
+  color:#111;
+}
+body.dark .about-card{
+  background:var(--glass-dark);
+  border-color:var(--border-dark);
+  color:#fff;
+}
+
+.about-card h1{
+  font-size:32px;
+  margin-bottom:12px;
+}
+
+.about-card h2{
+  font-size:20px;
+  margin-top:28px;
+  margin-bottom:10px;
+}
+
+.about-card p{
+  font-size:14px;
+  line-height:1.8;
+  opacity:.85;
+}
+
+/* Footer bar */
+.footer-bar{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 40px);
+  max-width:420px;
+  height:68px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 22px;
+  background:var(--glass-light);
+  backdrop-filter:blur(18px);
+  border-radius:26px;
+  border:1px solid var(--border-light);
+  box-shadow:0 18px 45px rgba(0,0,0,.25);
+}
+body.dark .footer-bar{
+  background:var(--glass-dark);
+  border-color:var(--border-dark);
+}
+
+.footer-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  font-size:11px;
+  cursor:pointer;
+  transition:.3s;
+}
+.footer-item span{font-size:20px;}
+.footer-item:hover{transform:translateY(-4px);}
+body.dark .footer-item{color:#fff;}
+
+.footer-icon{
+  width:40px;
+  height:40px;
+  object-fit:contain;
+}
+
+.footer-item.active .footer-icon{
+  filter: drop-shadow(0 0 6px rgba(127,140,255,0.7));
+}
+
+.footer-item a{
+  text-decoration:none;
+  color:inherit;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="logo">RANJIT</div>
+<div class="toggle" onclick="toggleMode()">🌙</div>
+
+<div class="blob one"></div>
+<div class="blob two"></div>
+<div class="blob three"></div>
+
+<!-- ABOUT CONTENT -->
+<div class="container">
+  <div class="about-card">
+    <h1>About This App</h1>
+    <p>
+      This application is built with a premium glassmorphism UI concept,
+      focusing on modern design, smooth interactions, and a clean user experience.
+    </p>
+
+    <h2>Purpose</h2>
+    <p>
+      The goal of this project is to demonstrate front-end UI skills using
+      HTML, CSS, and JavaScript while maintaining a professional, app-like look.
+      It is designed for learning, showcasing, and experimentation.
+    </p>
+
+    <h2>Technology Used</h2>
+    <p>
+      • HTML5 for structure<br>
+      • CSS3 for glass effects, animations, and responsiveness<br>
+      • JavaScript for theme switching and interactions
+    </p>
+
+    <h2>Developer</h2>
+    <p>
+      Hello, I’m Ranjit Das, a third-year Electronics and Communication Engineering
+      (ECE) student at University of kalyani.
+    </p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer-bar">
+  <div class="footer-item">
+  <a href="index.html">
+    <span>
+      <img src="image/back.png" class="footer-icon">
+    </span>
+  </a>
+</div>
+
+
+  <div class="footer-item active">
+    <a href="index.html">
+    <span>
+      <img src="image/home.png" class="footer-icon">
+    </span>
+  </a>
+    
+  </div>
+
+  <div class="footer-item">
+   <a href="mailto:rd687723@gmail.com">
+    <span>
+      <img src="image/mail.png" class="footer-icon">
+    </span>
+  </a>
+  </div>
+
+  <div class="footer-item">
+    <a href="about.html">
+    <span>
+      <img src="image/about.png" class="footer-icon">
+    </span>
+  </a>
+  </div>
+
+</footer>
+
+<script>
+const body=document.body;
+const toggle=document.querySelector('.toggle');
+
+if(localStorage.getItem('mode')==='dark'){
+  body.classList.add('dark');
+  toggle.textContent='☀️';
+}
+
+function toggleMode(){
+  body.classList.toggle('dark');
+  toggle.textContent=body.classList.contains('dark')?'☀️':'🌙';
+  localStorage.setItem('mode',body.classList.contains('dark')?'dark':'light');
+}
+</script>
+
+</body>
+</html>
